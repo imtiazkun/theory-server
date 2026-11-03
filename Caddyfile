@@ -1,0 +1,3 @@
+{$THEORY_DOMAIN} {
+	reverse_proxy theory-server:8080
+}

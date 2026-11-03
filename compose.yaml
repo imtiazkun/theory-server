@@ -1,0 +1,27 @@
+# theory-server behind Caddy, which serves HTTPS (GIT-11).
+# Set THEORY_DOMAIN to the server's domain name, then: docker compose up -d
+services:
+  theory-server:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - theory-data:/data
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - theory-server
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      THEORY_DOMAIN: ${THEORY_DOMAIN:?Set THEORY_DOMAIN to the server's domain name}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  theory-data:
+  caddy-data:
+  caddy-config:
